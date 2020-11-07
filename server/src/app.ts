@@ -30,6 +30,7 @@ export const graphqlApp = async (gqlServerOptions: GQLServerConfig = {}) => {
     }
   } catch (err) {
     console.error(err);
+    process.exit(1);
   }
 };
 

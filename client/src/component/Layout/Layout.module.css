@@ -11,6 +11,7 @@
 
 .foreign video {
   height: 100%;
+  width: 100%;
 }
 
 .host {
@@ -20,10 +21,14 @@
   border: 5px solid blue;
 }
 
-.handler {
-  font-size: 20px;
+.actionBar {
+  display: flex;
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translate(-50%);
+}
+
+.handler {
+  font-size: 20px;
 }

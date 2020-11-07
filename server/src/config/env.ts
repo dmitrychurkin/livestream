@@ -7,6 +7,7 @@ const {
   REDIS_PORT,
   NODE_ENV,
   PORT,
+  APP_TYPE
 } = process.env;
 
 export default {
@@ -14,4 +15,5 @@ export default {
   PORT,
   REDIS_HOST,
   REDIS_PORT,
+  APP_TYPE
 };

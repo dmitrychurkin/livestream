@@ -1,17 +1,19 @@
 import clsx from 'clsx';
-import React, { FC, memo } from 'react';
+import type { DetailedHTMLProps, ForwardRefRenderFunction, VideoHTMLAttributes } from 'react';
+import React, { forwardRef, memo } from 'react';
 
 import style from './Screen.module.css';
 
 type Props = {
   readonly className?: string;
-};
-const Screen: FC<Props> = ({ className }) => {
+  readonly srcObject?: MediaStream | Blob;
+} & DetailedHTMLProps<VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>;
+const Screen: ForwardRefRenderFunction<HTMLVideoElement, Props> = ({ className, ...videoElementProps }, forwardedRef) => {
   return (
     <div className={clsx(style.root, className)}>
-      <video />
+      <video ref={forwardedRef} {...videoElementProps} />
     </div>
   );
 };
 
-export default memo(Screen);
+export default memo(forwardRef(Screen));

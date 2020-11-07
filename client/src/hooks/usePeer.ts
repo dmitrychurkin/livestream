@@ -1,5 +1,9 @@
 import { useEffect } from "react";
-
+  // const connector = useContext(ConnectionContext);
+  // const onClick = useCallback(() => {
+  //   const isClient = window.location.pathname.includes('/client');
+  //   connector?.connect({ url: 'http://localhost:3000', connectOpts: { query: isClient ? 'userType=initiator' : undefined } }, { initiator: isClient });
+  // }, [connector]);
 export default function useWs(url = '//localhost:3000') {
   console.log(window.location);
   useEffect(() => {

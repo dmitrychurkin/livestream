@@ -1,23 +1,74 @@
-import React, { memo, useCallback, useContext } from 'react';
+import React, { memo, RefObject, useEffect, useRef } from 'react';
 import Screen from 'component/Screen';
 
-import { ConnectionContext } from 'context/Connection';
+import useMediaRecorder from 'hooks/useMediaRecorder';
 
 import style from './Layout.module.css';
 
 
 const Layout = () => {
-  const connector = useContext(ConnectionContext);
-  const onClick = useCallback(() => {
-    const isClient = window.location.pathname.includes('/client');
-    connector?.connect({ url: 'http://localhost:3000', connectOpts: { query: isClient ? 'userType=initiator' : undefined } }, { initiator: isClient });
-  }, [connector]);
+  const hostVideoRef = useRef() as RefObject<HTMLVideoElement>;
+  const recordVideoRef = useRef() as RefObject<HTMLVideoElement>;
+  const { recordingState, stream, blob, onInit, onRecord, onStop } = useMediaRecorder();
+
+  useEffect(() => {
+    if (stream) {
+      const { current } = hostVideoRef;
+      if (current) {
+        current.srcObject = stream;
+        current.play();
+      }
+    }
+  }, [stream]);
+
+  useEffect(() => {
+    const { current } = recordVideoRef;
+    if (blob && current) {
+      console.log(blob);
+      current.src = URL.createObjectURL(blob);
+      current.play();
+    }
+    return () => {
+      if (current) {
+        URL.revokeObjectURL(current.src);
+      }
+    };
+  }, [blob]);
 
   return (
     <div className={style.root}>
-      <Screen className={style.foreign} />
-      <Screen className={style.host} />
-      <button className={style.handler} onClick={onClick}>Пиздец</button>
+      <Screen ref={hostVideoRef} className={style.foreign} />
+      <Screen ref={recordVideoRef} className={style.host} controls />
+      <div className={style.actionBar}>
+        <button
+          className={style.handler}
+          onClick={onInit}
+          disabled={typeof stream !== 'undefined'}
+        >
+          Показать ебальник
+        </button>
+        <button
+          className={style.handler}
+          onClick={onRecord}
+          disabled={
+            typeof stream === 'undefined' ||
+            recordingState === 'recording'
+          }
+        >
+          Пиши
+        </button>
+        <button
+          className={style.handler}
+          onClick={onStop}
+          disabled={
+            typeof stream === 'undefined' ||
+            typeof recordingState === 'undefined' ||
+            recordingState === 'inactive'
+          }
+        >
+          Хорош
+        </button>
+      </div>
     </div>
   );
 };

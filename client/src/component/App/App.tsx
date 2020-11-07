@@ -1,11 +1,18 @@
+import React, { memo } from 'react';
+import { ApolloProvider } from '@apollo/client';
+
 import Layout from 'component/Layout';
 import Connection from 'context/Connection';
-import React, { memo } from 'react';
+
+import graphqlClient from '../../graphql';
+
 
 const App = () => (
-  <Connection>
-    <Layout />
-  </Connection>
+  <ApolloProvider client={graphqlClient}>
+    <Connection>
+      <Layout />
+    </Connection>
+  </ApolloProvider>
 );
 
 export default memo(App);
