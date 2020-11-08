@@ -4,36 +4,46 @@ import Screen from 'component/Screen';
 import useMediaRecorder from 'hooks/useMediaRecorder';
 
 import style from './Layout.module.css';
+import { gql, useMutation } from '@apollo/client';
 
+
+const MUTATION = gql`
+  mutation($file: Upload!) {
+    uploadFile(file: $file)
+  }
+`;
 
 const Layout = () => {
   const hostVideoRef = useRef() as RefObject<HTMLVideoElement>;
   const recordVideoRef = useRef() as RefObject<HTMLVideoElement>;
+  const [mutate] = useMutation(MUTATION);
   const { recordingState, stream, blob, onInit, onRecord, onStop } = useMediaRecorder();
 
   useEffect(() => {
-    if (stream) {
-      const { current } = hostVideoRef;
-      if (current) {
-        current.srcObject = stream;
-        current.play();
+    const { current: hostVideoEl } = hostVideoRef;
+    if (hostVideoEl) {
+      hostVideoEl.srcObject = stream;
+      if (stream) {
+        hostVideoEl.play();
       }
     }
   }, [stream]);
 
   useEffect(() => {
-    const { current } = recordVideoRef;
-    if (blob && current) {
-      console.log(blob);
-      current.src = URL.createObjectURL(blob);
-      current.play();
+    const { current: recordVideoEl } = recordVideoRef;
+    if (blob) {
+      mutate({ variables: { file: blob } });
+      if (recordVideoEl) {
+        recordVideoEl.src = URL.createObjectURL(blob);
+        recordVideoEl.play();
+      }
     }
     return () => {
-      if (current) {
-        URL.revokeObjectURL(current.src);
+      if (recordVideoEl) {
+        URL.revokeObjectURL(recordVideoEl.src);
       }
     };
-  }, [blob]);
+  }, [blob, mutate]);
 
   return (
     <div className={style.root}>
@@ -43,7 +53,7 @@ const Layout = () => {
         <button
           className={style.handler}
           onClick={onInit}
-          disabled={typeof stream !== 'undefined'}
+          disabled={stream !== null}
         >
           Показать ебальник
         </button>
@@ -51,7 +61,7 @@ const Layout = () => {
           className={style.handler}
           onClick={onRecord}
           disabled={
-            typeof stream === 'undefined' ||
+            stream === null ||
             recordingState === 'recording'
           }
         >
@@ -61,7 +71,7 @@ const Layout = () => {
           className={style.handler}
           onClick={onStop}
           disabled={
-            typeof stream === 'undefined' ||
+            stream === null ||
             typeof recordingState === 'undefined' ||
             recordingState === 'inactive'
           }

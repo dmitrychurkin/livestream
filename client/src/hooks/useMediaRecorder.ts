@@ -4,7 +4,7 @@ import { useCallback, useContext, useState } from "react";
 export default function useMediaRecorder() {
   const mediaRecorder = useContext(RecorderContext);
 
-  const [stream, setStream] = useState<MediaStream>();
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const [blob, setBlob] = useState<Blob>();
   const [recordingState, setRecordingState] = useState<RecordingState>();
 

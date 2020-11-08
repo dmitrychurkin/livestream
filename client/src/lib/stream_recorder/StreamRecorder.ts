@@ -27,11 +27,7 @@ export default class StreamRecorder implements IStreamRecorder {
     async startRecording(mediaRecorderCallbacks?: IMediaRecorderCallbacks, mediaRecorderOptions?: MediaRecorderOptions): Promise<Blob> {
         let stream = this.mediaStream;
         if (!stream) {
-            try {
-                stream = await this.getMediaStream();
-            } catch (err) {
-                throw err;
-            }
+            stream = await this.getMediaStream();
         }
 
         const mediaRecorder = this.revokeMediaRecorder(stream, mediaRecorderOptions);

@@ -1,5 +1,7 @@
 
+import { createWriteStream } from 'fs';
 import { gql } from 'apollo-server';
+
 import mergeRawSchemas from './util/mergeRawSchemas';
 
 // import graphqlSchemaShards from './schemaShards';
@@ -12,7 +14,7 @@ export default mergeRawSchemas(
                     _empty: String
                 }
                 type Mutation {
-                    _empty: String
+                    uploadFile(file: Upload!): Boolean!
                 }
                 type Subscription {
                     _empty: String
@@ -20,7 +22,17 @@ export default mergeRawSchemas(
             `
         ],
         resolvers: {
-            Query: {}
+            Query: {},
+            // TODO: refactor into the shard
+            Mutation: {
+                uploadFile: async (_, { file }) => {
+                    const { filename, createReadStream } = await file;
+                    const sourceStream = createReadStream();
+                    const destStream = createWriteStream(filename);
+                    sourceStream.pipe(destStream);
+                    return true;
+                }
+            }
         }
     },
     // graphqlSchemaShards
