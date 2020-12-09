@@ -4,8 +4,27 @@
   min-height: 450px;
 }
 
+.wrapper {
+  padding: 0 32px;
+  height: calc(100vh - 104px);
+}
+
+.content {
+  max-width: 1040px;
+  margin: auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-gap: 32px;
+}
+
+.panel {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+}
+
 .foreign {
-  height: 100vh;
+  height: calc(100vh - 104px);
   box-sizing: border-box;
 }
 
@@ -31,4 +50,26 @@
 
 .handler {
   font-size: 20px;
+}
+
+/* Button styling */
+
+.buttonRec {
+  background-color: #090A33;
+  border-radius: 4px;
+  padding: 8px 16px;
+  justify-self: center;
+}
+
+.withIcon {
+  font-size: 18px;
+  line-height: 26px;
+  color: #ffffff;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 4px;
+}
+
+.withIcon path {
+  fill: #ffffff;
 }

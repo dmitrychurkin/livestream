@@ -1,0 +1,35 @@
+.card {
+  width: 352px;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  border: 1px solid #fafafa;
+  filter: drop-shadow(0px 0px 8px rgba(9, 10, 51, 0.05));
+  display: grid;
+  grid-template-columns: 25% 75%;
+}
+
+.content {
+  font-size: 18px;
+  line-height: 24px;
+  padding: 16px;
+  display: grid;
+  grid-gap: 4px;
+}
+
+.filename {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #090A33;
+}
+
+.info {
+  color: rgba(9, 10, 51, 0.4);
+}
+
+@media screen and (max-width: 384px) {
+  .card {
+    width: calc(100vw - 32px);
+  }
+}
+
