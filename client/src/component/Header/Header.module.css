@@ -1,0 +1,36 @@
+.wrapper {
+  padding: 0 32px;
+}
+
+.content {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.03em;
+  height: 104px;
+  position:relative;
+  max-width: 1040px; 
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.logo {
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+}
+
+.menuItem {
+  font-family: TTNorms-Bold;
+  font-size: 18px;
+  line-height: 23px;
+  letter-spacing: -0.02em;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 4px;
+  align-items: center;
+  cursor: pointer;
+}

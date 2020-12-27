@@ -1,9 +1,13 @@
 import React, { createContext, FC, memo, ReactNode } from "react";
 
-import StreamRecorder from "lib/stream_recorder";
+import StreamRecorder, { StreamProvider, MediaRecorderFactory, IStreamRecorder } from "lib/stream_recorder";
 
-const streamRecorder = new StreamRecorder();
-export const RecorderContext = createContext<StreamRecorder>(streamRecorder);
+const streamRecorder = new StreamRecorder(
+    new StreamProvider(),
+    new MediaRecorderFactory()
+);
+
+export const RecorderContext = createContext<IStreamRecorder>(streamRecorder);
 
 type Props = {
     readonly children: ReactNode;

@@ -1,18 +1,15 @@
+import { IStreamRecorderListeners } from "./IStreamRecorderListeners";
+
 export interface IStreamRecorder {
     getMediaStream(mediaStreamConstraints?:  MediaStreamConstraints): Promise<MediaStream>;
 
-    startRecording(mediaRecorderCallbacks?: IMediaRecorderCallbacks, mediaRecorderOptions?: MediaRecorderOptions): Promise<Blob>;
-
-    stopRecording(): void;
+    getRecordingState(): RecordingState | undefined;
 
     pauseRecording(): void;
 
-    getRecordingState(): RecordingState | undefined;
-}
+    setRecorderListeners(streamRecorderListeners: IStreamRecorderListeners): void;
 
-export interface IMediaRecorderCallbacks {
-    onStart?: EventListener;
-    onStop?: EventListener;
-    onResume?: EventListener;
-    onPause?: EventListener;
+    startRecording(mediaRecorderOptions?: MediaRecorderOptions, mediaStream?: MediaStream): Promise<Blob>;
+
+    stopRecording(): void;
 }

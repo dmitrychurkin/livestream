@@ -1,19 +1,21 @@
-import { IMediaRecorderCallbacks, IStreamRecorder } from "./IStreamRecorder";
+import AbstractRecorderFactory from "./AbstractRecorderFactory";
+import AbstractStreamProvider from "./AbstractStreamProvider";
+import { IStreamRecorder } from "./IStreamRecorder";
+import { IStreamRecorderListeners } from "./IStreamRecorderListeners";
 
 export default class StreamRecorder implements IStreamRecorder {
+    private static mediaStreamConstraints = { audio: true, video: true };
 
-    private mediaStream?: MediaStream;
-    private mediaRecorder?: MediaRecorder;
+    private streamRecorderListeners: IStreamRecorderListeners = {};
+    private mediaRecorder!: MediaRecorder;
 
-    private get defaultMediaStreamConstraints() {
-        return {
-            audio: true,
-            video: true
-        };
-    }
+    constructor(
+        private streamProvider: AbstractStreamProvider<Promise<MediaStream>, MediaStreamConstraints>,
+        private recorderFactory: AbstractRecorderFactory<MediaStream, MediaRecorderOptions, MediaRecorder>
+    ) {}
 
     getMediaStream(mediaStreamConstraints?: MediaStreamConstraints): Promise<MediaStream> {
-        return this.revokeMediaStream(mediaStreamConstraints);
+        return this.streamProvider.getStream(mediaStreamConstraints ?? StreamRecorder.mediaStreamConstraints);
     }
 
     getRecordingState(): RecordingState | undefined {
@@ -24,31 +26,26 @@ export default class StreamRecorder implements IStreamRecorder {
         return this.mediaRecorder?.pause();
     }
 
-    async startRecording(mediaRecorderCallbacks?: IMediaRecorderCallbacks, mediaRecorderOptions?: MediaRecorderOptions): Promise<Blob> {
-        let stream = this.mediaStream;
-        if (!stream) {
-            stream = await this.getMediaStream();
-        }
+    async startRecording(mediaRecorderOptions?: MediaRecorderOptions, mediaStream?: MediaStream): Promise<Blob> {
+        const stream = mediaStream ?? await this.getMediaStream(StreamRecorder.mediaStreamConstraints);
+        const mediaRecorder = this.mediaRecorder = this.recorderFactory.createRecorder(stream, mediaRecorderOptions);
 
-        const mediaRecorder = this.revokeMediaRecorder(stream, mediaRecorderOptions);
         mediaRecorder.start();
 
-        if (typeof mediaRecorderCallbacks === 'object') {
-            const {
-                onStart = null,
-                onStop = null,
-                onResume = null,
-                onPause = null
-            } = mediaRecorderCallbacks;
-            mediaRecorder.onstart = onStart;
-            mediaRecorder.onstop = onStop;
-            mediaRecorder.onpause = onPause;
-            mediaRecorder.onresume = onResume;
-        }
+        mediaRecorder.onpause = this.streamRecorderListeners.onpause ?? null;
+        mediaRecorder.onresume = this.streamRecorderListeners.onresume ?? null;
+        mediaRecorder.onstart = this.streamRecorderListeners.onstart ?? null;
+        mediaRecorder.onstop = this.streamRecorderListeners.onstop ?? null;
 
         return new Promise((resolve, reject) => {
-            mediaRecorder.ondataavailable = (e: BlobEvent) => resolve(e.data);
-            mediaRecorder.onerror = reject;
+            mediaRecorder.ondataavailable = (e: BlobEvent) => {
+                this.streamRecorderListeners.ondataavailable?.(e);
+                resolve(e.data);
+            };
+            mediaRecorder.onerror = err => {
+                this.streamRecorderListeners.onerror?.(err);
+                reject(err);
+            };
         });
     }
 
@@ -56,18 +53,7 @@ export default class StreamRecorder implements IStreamRecorder {
         return this.mediaRecorder?.stop();
     }
 
-    // Sigleton methods
-    private async revokeMediaStream(mediaStreamConstraints?: MediaStreamConstraints): Promise<MediaStream> {
-        if (!this.mediaStream) {
-            this.mediaStream = await navigator.mediaDevices.getUserMedia(mediaStreamConstraints ?? this.defaultMediaStreamConstraints);
-        }
-        return this.mediaStream;
-    }
-
-    private revokeMediaRecorder(mediaStream: MediaStream, mediaRecorderOptions?: MediaRecorderOptions): MediaRecorder {
-        if (!this.mediaRecorder) {
-            this.mediaRecorder = new MediaRecorder(mediaStream, mediaRecorderOptions);
-        }
-        return this.mediaRecorder;
+    setRecorderListeners(streamRecorderListeners: IStreamRecorderListeners): void {
+        this.streamRecorderListeners = streamRecorderListeners;
     }
 }

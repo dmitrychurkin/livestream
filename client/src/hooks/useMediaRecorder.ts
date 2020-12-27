@@ -1,5 +1,5 @@
 import { RecorderContext } from "context/Recorder";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export default function useMediaRecorder() {
   const mediaRecorder = useContext(RecorderContext);
@@ -8,22 +8,37 @@ export default function useMediaRecorder() {
   const [blob, setBlob] = useState<Blob>();
   const [recordingState, setRecordingState] = useState<RecordingState>();
 
-  const onInit = useCallback(async () => {
-    setStream(
-      await mediaRecorder.getMediaStream()
-    );
-  }, [mediaRecorder]);
-
-  const onRecord = useCallback(async () => {
+  useEffect(() => {
     const setRState = () => {
       setRecordingState(mediaRecorder.getRecordingState())
     };
 
+    mediaRecorder.setRecorderListeners({
+      onstart: setRState,
+      onstop: setRState
+    });
+  }, [mediaRecorder]);
+
+  const initStream = useCallback(async () => {
+    const mediaStream = await mediaRecorder.getMediaStream();
+    setStream(mediaStream);
+    return mediaStream;
+  }, [mediaRecorder]);
+
+  const closeStream = useCallback(() => {
+    setStream(streamState => {
+      if (streamState) {
+        streamState.getTracks().forEach(track => {
+          track.stop();
+        });
+      }
+      return null;
+    });
+  }, []);
+
+  const onRecord = useCallback(async () => {
     setBlob(
-      await mediaRecorder.startRecording({
-        onStart: setRState,
-        onStop: setRState
-      })
+      await mediaRecorder.startRecording()
     );
   }, [mediaRecorder]);
 
@@ -36,7 +51,8 @@ export default function useMediaRecorder() {
     recordingState,
     stream,
     blob,
-    onInit,
+    initStream,
+    closeStream,
     onRecord,
     onStop
   };
