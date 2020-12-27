@@ -1,4 +1,4 @@
-import type { MutableRefObject, RefObject } from 'react';
+import type { RefObject } from 'react';
 import React, { memo, useEffect, useRef, useState, useCallback } from "react";
 // import Screen from "component/Screen";
 import Header from "component/Header";
@@ -22,7 +22,7 @@ const MUTATION = gql`
 let mediaStreamCache: MediaStream | null = null;
 
 const Layout = () => {
-  const hostVideoRef = useRef() as MutableRefObject<HTMLVideoElement>;
+  const hostVideoRef = useRef() as RefObject<HTMLVideoElement>;
   const recordVideoRef = useRef() as RefObject<HTMLVideoElement>;
 
   const [isVideoOpen, setVideoIsOpen] = useState<boolean>(false);
