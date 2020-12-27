@@ -1,6 +1,8 @@
 import { IStreamRecorderListeners } from "./IStreamRecorderListeners";
 
 export interface IStreamRecorder {
+    closeMediaStream(mediaStream: MediaStream): void;
+
     getMediaStream(mediaStreamConstraints?:  MediaStreamConstraints): Promise<MediaStream>;
 
     getRecordingState(): RecordingState | undefined;

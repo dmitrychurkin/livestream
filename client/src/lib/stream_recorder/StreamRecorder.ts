@@ -12,7 +12,13 @@ export default class StreamRecorder implements IStreamRecorder {
     constructor(
         private streamProvider: AbstractStreamProvider<Promise<MediaStream>, MediaStreamConstraints>,
         private recorderFactory: AbstractRecorderFactory<MediaStream, MediaRecorderOptions, MediaRecorder>
-    ) {}
+    ) { }
+
+    closeMediaStream(mediaStream: MediaStream): void {
+        mediaStream.getTracks().forEach(track => {
+            track.stop();
+        });
+    }
 
     getMediaStream(mediaStreamConstraints?: MediaStreamConstraints): Promise<MediaStream> {
         return this.streamProvider.getStream(mediaStreamConstraints ?? StreamRecorder.mediaStreamConstraints);

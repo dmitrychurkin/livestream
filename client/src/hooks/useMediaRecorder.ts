@@ -25,16 +25,18 @@ export default function useMediaRecorder() {
     return mediaStream;
   }, [mediaRecorder]);
 
-  const closeStream = useCallback(() => {
-    setStream(streamState => {
-      if (streamState) {
-        streamState.getTracks().forEach(track => {
-          track.stop();
-        });
-      }
-      return null;
-    });
-  }, []);
+  const closeStream = useCallback((mediaStream?: MediaStream) => {
+    if (mediaStream) {
+      mediaRecorder.closeMediaStream(mediaStream);
+    }else {
+      setStream(streamState => {
+        if (streamState) {
+          mediaRecorder.closeMediaStream(streamState);
+        }
+        return null;
+      });
+    }
+  }, [mediaRecorder]);
 
   const onRecord = useCallback(async () => {
     setBlob(

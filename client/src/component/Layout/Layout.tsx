@@ -31,13 +31,25 @@ const Layout = () => {
 
   const {
     // recordingState,
-    // stream,
+    stream,
     blob,
     initStream,
     closeStream
     // onRecord,
     // onStop,
   } = useMediaRecorder();
+
+  useEffect(() => {
+    if (mediaStreamCache) {
+      closeStream(mediaStreamCache);
+    }
+    const { current: hostVideoEl } = hostVideoRef;
+    if (hostVideoEl) {
+      hostVideoEl.srcObject = stream;
+      hostVideoEl.play();
+    }
+    mediaStreamCache = stream;
+  }, [stream, closeStream]);
 
   useEffect(() => {
     const { current: recordVideoEl } = recordVideoRef;
@@ -59,19 +71,6 @@ const Layout = () => {
     setVideoIsOpen(state => {
       if (!state) {
         initStream()
-          .then(mediaStream => {
-            if (mediaStreamCache) {
-              mediaStreamCache.getTracks().forEach(track => {
-                track.stop();
-              });
-            }
-            const { current: hostVideoEl } = hostVideoRef;
-            if (hostVideoEl) {
-              hostVideoEl.srcObject = mediaStream;
-              hostVideoEl.play();
-            }
-            mediaStreamCache = mediaStream;
-          });
       } else {
         closeStream();
       }
