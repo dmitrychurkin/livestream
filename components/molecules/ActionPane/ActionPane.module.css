@@ -1,0 +1,24 @@
+.root {
+    width: 100%;
+    background: #F4F4F4;
+    border: .063rem solid #FAFAFA;
+    box-shadow: 0 .625rem 1.25rem rgba(9, 10, 51, .1);
+    border-radius: .5rem;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    color: rgba(9, 10, 51, .4);
+    position: relative;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

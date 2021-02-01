@@ -1,0 +1,16 @@
+.root {
+    padding-top: 2.125rem;
+    padding-bottom: 2.125rem;
+    display: grid;
+    grid-template-columns: repeat(2, 8.5rem) minmax(15.625rem, 1fr) repeat(2, 8.5rem);
+    align-items: center;
+}
+
+.logo {
+    grid-column: 3 / 4;
+    justify-self: center;
+}
+
+.last {
+    justify-self: flex-end;
+}
