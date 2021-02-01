@@ -20,12 +20,14 @@ const RecordPage: FC = () => {
     stream,
     recordingState,
     blob,
+    setBlob,
   } = useMediaRecorder();
 
   const [isVideoPaneActive, setVideoPaneState] = useState<boolean>(false);
 
   const onPaneClose = useCallback(() => {
     closeStream();
+    setBlob(null);
     setVideoPaneState(false);
   }, [closeStream]);
 
@@ -33,6 +35,12 @@ const RecordPage: FC = () => {
     setVideoPaneState(true);
     initStream();
   }, [initStream]);
+
+  const onRecordStart = useCallback(() => {
+    if (stream) {
+      onRecord(stream);
+    }
+  }, [onRecord, stream]);
 
   return (
     <Page>
@@ -56,7 +64,7 @@ const RecordPage: FC = () => {
                   <Button
                     variant={ButtonVariants.contained}
                     startIcon={<div className={styles.recordIcon} />}
-                    onClick={onRecord}
+                    onClick={onRecordStart}
                   >
                     Start recording
                   </Button>

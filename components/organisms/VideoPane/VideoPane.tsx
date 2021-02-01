@@ -4,9 +4,9 @@ import ActionPane, { ActionPaneToolbar } from "components/molecules/ActionPane";
 import CloseIcon from "components/icons/Cross.svg";
 
 type Props = {
-  readonly stream?: MediaStream | null;
+  readonly stream: MediaStream | null;
   readonly className?: string;
-  readonly data?: Blob;
+  readonly data: Blob | null;
   readonly children: ReactNode;
   readonly onPaneClose: () => void;
 };
@@ -19,42 +19,33 @@ const VideoPane: FC<Props> = ({
   onPaneClose,
 }) => {
   const videoStreamRef = useRef<HTMLVideoElement>(null);
-  const videoRecordRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const { current: videoStreamEl } = videoStreamRef;
     let blobUrl: string;
-    if (videoStreamEl && stream) {
-      if (typeof videoStreamEl.srcObject === "object") {
-        videoStreamEl.srcObject = stream;
-      } else {
-        videoStreamEl.src = blobUrl = URL.createObjectURL(stream);
+    let isSrcObjectSupported = false;
+    if (videoStreamEl) {
+      isSrcObjectSupported = typeof videoStreamEl.srcObject === "object";
+      if (data) {
+        videoStreamEl.src = blobUrl = URL.createObjectURL(data);
+      } else if (stream) {
+        if (isSrcObjectSupported) {
+          videoStreamEl.srcObject = stream;
+        } else {
+          videoStreamEl.src = blobUrl = URL.createObjectURL(stream);
+        }
       }
     }
 
     return () => {
-      blobUrl && URL.revokeObjectURL(blobUrl);
-      if (videoStreamEl && stream) {
-        (videoStreamEl.srcObject as MediaStream)
-          .getTracks()
-          .forEach((track) => {
-            track.stop();
-          });
+      if (videoStreamEl && isSrcObjectSupported) {
         videoStreamEl.srcObject = null;
       }
+      if (blobUrl) {
+        URL.revokeObjectURL(blobUrl);
+      }
     };
-  }, [stream]);
-
-  useEffect(() => {
-    const { current: videoRecordEl } = videoRecordRef;
-    let blobUrl: string;
-    if (videoRecordEl && data) {
-      videoRecordEl.src = blobUrl = URL.createObjectURL(data);
-    }
-    return () => {
-      blobUrl && URL.revokeObjectURL(blobUrl);
-    };
-  }, [data]);
+  }, [stream, data]);
 
   return (
     <ActionPane className={className}>
@@ -67,11 +58,12 @@ const VideoPane: FC<Props> = ({
       >
         {children}
       </ActionPaneToolbar>
-      {data ? (
-        <video controls ref={videoRecordRef} />
-      ) : (
-        <video autoPlay muted ref={videoStreamRef} />
-      )}
+      <video
+        ref={videoStreamRef}
+        controls={Boolean(data)}
+        muted={!data}
+        autoPlay={!data}
+      />
     </ActionPane>
   );
 };

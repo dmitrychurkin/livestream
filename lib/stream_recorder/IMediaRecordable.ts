@@ -10,8 +10,8 @@ export interface IMediaRecordable {
   setRecorderListeners(streamRecorderListeners: IStreamRecorderListeners): void;
 
   startRecording(
-    mediaRecorderOptions?: MediaRecorderOptions,
-    mediaStream?: MediaStream
+    mediaStream: MediaStream,
+    mediaRecorderOptions?: MediaRecorderOptions
   ): Promise<Blob>;
 
   stopRecording(): void;

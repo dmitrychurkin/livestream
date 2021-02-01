@@ -2,10 +2,11 @@ import AbstractRecorderFactory from "./AbstractRecorderFactory";
 import AbstractStreamProvider from "./AbstractStreamProvider";
 import { IMediaRecordable } from "./IMediaRecordable";
 import { IMediaStreamable } from "./IMediaStreamable";
+import { IStreamRecorderFacade } from "./IStreamRecorderFacade";
 import { IStreamRecorderListeners } from "./IStreamRecorderListeners";
 
 export default class StreamRecorder
-  implements IMediaStreamable, IMediaRecordable {
+  implements IMediaStreamable, IMediaRecordable, IStreamRecorderFacade {
   private static mediaStreamConstraints = { audio: true, video: true };
 
   private streamRecorderListeners: IStreamRecorderListeners = {};
@@ -48,23 +49,17 @@ export default class StreamRecorder
   }
 
   public async startRecording(
-    mediaRecorderOptions?: MediaRecorderOptions,
-    mediaStream?: MediaStream
+    mediaStream: MediaStream,
+    mediaRecorderOptions?: MediaRecorderOptions
   ): Promise<Blob> {
-    const stream =
-      mediaStream ??
-      (await this.getMediaStream(StreamRecorder.mediaStreamConstraints));
     const mediaRecorder = (this.mediaRecorder = this.recorderFactory.createRecorder(
-      stream,
+      mediaStream,
       mediaRecorderOptions
     ));
 
     mediaRecorder.start();
 
-    mediaRecorder.onpause = this.streamRecorderListeners.onpause ?? null;
-    mediaRecorder.onresume = this.streamRecorderListeners.onresume ?? null;
-    mediaRecorder.onstart = this.streamRecorderListeners.onstart ?? null;
-    mediaRecorder.onstop = this.streamRecorderListeners.onstop ?? null;
+    this.setSecondaryListeners(mediaRecorder);
 
     return new Promise((resolve, reject) => {
       mediaRecorder.ondataavailable = (e: BlobEvent) => {
@@ -86,5 +81,12 @@ export default class StreamRecorder
     streamRecorderListeners: IStreamRecorderListeners
   ): void {
     this.streamRecorderListeners = streamRecorderListeners;
+  }
+
+  private setSecondaryListeners(mediaRecorder: MediaRecorder) {
+    mediaRecorder.onpause = this.streamRecorderListeners.onpause ?? null;
+    mediaRecorder.onresume = this.streamRecorderListeners.onresume ?? null;
+    mediaRecorder.onstart = this.streamRecorderListeners.onstart ?? null;
+    mediaRecorder.onstop = this.streamRecorderListeners.onstop ?? null;
   }
 }

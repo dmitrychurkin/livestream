@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, SetStateAction, Dispatch } from "react";
 import StreamRecorder, {
   IStreamRecorderFacade,
   MediaRecorderFactory,
@@ -9,13 +9,19 @@ type HandlerFn = () => void;
 type MediaRecorderHookReturnValue = {
   readonly recordingState: RecordingState | undefined;
   readonly stream: MediaStream | null;
-  readonly blob: Blob | undefined;
-  readonly initStream: HandlerFn;
+  readonly blob: Blob | null;
+  readonly initStream: (
+    mediaStreamConstraints?: MediaStreamConstraints
+  ) => void;
   readonly closeStream: HandlerFn;
-  readonly onRecord: HandlerFn;
+  readonly onRecord: (
+    mediaStream: MediaStream,
+    mediaRecorderOptions?: MediaRecorderOptions
+  ) => void;
   readonly onStop: HandlerFn;
   readonly onResume: HandlerFn;
   readonly onPause: HandlerFn;
+  readonly setBlob: Dispatch<SetStateAction<Blob | null>>;
 };
 
 export const useMediaRecorder: () => MediaRecorderHookReturnValue = () => {
@@ -44,15 +50,26 @@ export const useMediaRecorder: () => MediaRecorderHookReturnValue = () => {
   });
 
   const [stream, setStream] = useState<MediaStream | null>(null);
-  const [blob, setBlob] = useState<Blob>();
+  const [blob, setBlob] = useState<Blob | null>(null);
 
-  const initStream = useCallback(async () => {
-    setStream(await mediaRecorder.getMediaStream());
-  }, [mediaRecorder]);
+  const initStream = useCallback(
+    async (mediaStreamConstraints?: MediaStreamConstraints) => {
+      setStream(await mediaRecorder.getMediaStream(mediaStreamConstraints));
+    },
+    [mediaRecorder]
+  );
 
-  const onRecord = useCallback(async () => {
-    setBlob(await mediaRecorder.startRecording());
-  }, [mediaRecorder]);
+  const onRecord = useCallback(
+    async (
+      mediaStream: MediaStream,
+      mediaRecorderOptions?: MediaRecorderOptions
+    ) => {
+      setBlob(
+        await mediaRecorder.startRecording(mediaStream, mediaRecorderOptions)
+      );
+    },
+    [mediaRecorder]
+  );
 
   const closeStream = useCallback(() => {
     setStream((streamState) => {
@@ -80,6 +97,7 @@ export const useMediaRecorder: () => MediaRecorderHookReturnValue = () => {
     recordingState,
     stream,
     blob,
+    setBlob,
     initStream,
     closeStream,
     onRecord,
