@@ -18,14 +18,14 @@
   background-color: var(--primary);
   color: var(--white);
   font-weight: normal;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   line-height: 2.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
 .round {
-  background-color: #D7D9D9;
+  background-color: #d7d9d9;
   border-radius: 50%;
   width: 3.5rem;
   height: 3.5rem;
