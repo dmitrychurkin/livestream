@@ -15,9 +15,10 @@
   /* Colors */
   --primary: #090a33;
   --secondary: #0f1055;
-  --page-background: #e3e5e6;
+  --page-background: hsl(204 9% 95%);
   --dark: #231c32;
   --white: #fff;
+  --field-background-grey: hsl(210 4% 91%);
 
   /* Fonts */
   --primary-font: TTNorms, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
@@ -26,12 +27,15 @@
   font-family: var(--primary-font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  font-size: 14px;
 }
 
 html,
 body {
   padding: 0;
   margin: 0;
+  height: 100%;
 }
 
 a {

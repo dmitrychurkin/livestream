@@ -1,6 +1,7 @@
 import React, { FC, memo } from "react";
 import Link from "next/link";
 import clsx from "clsx";
+import LogoIcon from "components/icons/LogoIcon.svg";
 import styles from "./AppLogo.module.css";
 
 type Props = {
@@ -9,7 +10,9 @@ type Props = {
 
 const AppLogo: FC<Props> = ({ className }) => (
   <Link href="/">
-    <div className={clsx(styles.root, className)}>AppLogo</div>
+    <div className={clsx(styles.root, className)}>
+      <LogoIcon />
+    </div>
   </Link>
 );
 

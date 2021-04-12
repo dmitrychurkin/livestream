@@ -2,6 +2,7 @@ import React, { FC, memo, ReactNode, useEffect, useRef } from "react";
 import Button from "components/atoms/Button";
 import ActionPane, { ActionPaneToolbar } from "components/molecules/ActionPane";
 import CloseIcon from "components/icons/Cross.svg";
+import styles from "./VideoPane.module.css";
 
 type Props = {
   readonly stream: MediaStream | null;
@@ -58,12 +59,14 @@ const VideoPane: FC<Props> = ({
       >
         {children}
       </ActionPaneToolbar>
-      <video
-        ref={videoStreamRef}
-        controls={Boolean(data)}
-        muted={!data}
-        autoPlay={!data}
-      />
+      <div className={styles.videoContainer}>
+        <video
+          ref={videoStreamRef}
+          controls={Boolean(data)}
+          muted={!data}
+          autoPlay={!data}
+        />
+      </div>
     </ActionPane>
   );
 };
