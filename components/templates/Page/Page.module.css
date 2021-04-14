@@ -1,12 +1,12 @@
 .root {
   background-color: var(--page-background);
-  min-width: 62rem;
-  padding: 0 6rem;
-  min-height: 18.75rem;
+  /* min-width: 62rem; */
+  padding: 0 16px;
+  /* min-height: 18.75rem; */
 }
 
 .activeArea {
-  max-width: 90rem;
+  max-width: 1040px;
   display: grid;
   grid-template-rows: min-content calc(100vh - 6.5rem);
   margin: auto;
