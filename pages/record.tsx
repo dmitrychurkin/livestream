@@ -2,7 +2,7 @@ import { FC, useCallback, useState } from "react";
 import clsx from "clsx";
 import Page from "components/templates/Page";
 import VideoPane from "components/organisms/VideoPane";
-import Button, { ButtonVariants } from "components/atoms/Button";
+import Button, { ButtonVariantEnum } from "components/atoms/Button";
 import { useMediaRecorder } from "hooks/useMediaRecorder";
 import CameraIcon from "components/icons/Camera.svg";
 import PauseIcon from "components/icons/Pause.svg";
@@ -43,7 +43,7 @@ const RecordPage: FC = () => {
   }, [onRecord, stream]);
 
   return (
-    <Page>
+    <Page isProtected title="Record">
       <main
         className={clsx(styles.root, isVideoPaneActive && styles.rootActive)}
       >
@@ -62,7 +62,7 @@ const RecordPage: FC = () => {
               <div className={styles.controls}>
                 {!recordingState || recordingState === "inactive" ? (
                   <Button
-                    variant={ButtonVariants.contained}
+                    variant={ButtonVariantEnum.contained}
                     startIcon={<div className={styles.recordIcon} />}
                     onClick={onRecordStart}
                   >
@@ -71,17 +71,23 @@ const RecordPage: FC = () => {
                 ) : (
                   <>
                     {recordingState === "paused" ? (
-                      <Button variant={ButtonVariants.round} onClick={onResume}>
+                      <Button
+                        variant={ButtonVariantEnum.round}
+                        onClick={onResume}
+                      >
                         <PlayIcon />
                       </Button>
                     ) : (
-                      <Button variant={ButtonVariants.round} onClick={onPause}>
+                      <Button
+                        variant={ButtonVariantEnum.round}
+                        onClick={onPause}
+                      >
                         <PauseIcon />
                       </Button>
                     )}
                     <Button
                       className={styles.stopControl}
-                      variant={ButtonVariants.round}
+                      variant={ButtonVariantEnum.round}
                       onClick={onStop}
                     >
                       <div className={styles.stopIcon} />
@@ -94,7 +100,7 @@ const RecordPage: FC = () => {
         ) : (
           <Button
             className={styles.paneTrigger}
-            variant={ButtonVariants.contained}
+            variant={ButtonVariantEnum.contained}
             startIcon={<CameraIcon />}
             onClick={onPaneOpen}
           >

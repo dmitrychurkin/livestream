@@ -9,7 +9,15 @@
   display: grid;
   grid-template-columns: repeat(2, max-content);
   align-items: center;
+  justify-content: center;
   grid-gap: 4px;
+  transition: .3s ease-in-out;
+}
+
+.root:disabled {
+  cursor: initial;
+  color: rgba(9, 10, 51, 0.4);
+  background: rgba(9, 10, 51, 0.1);
 }
 
 .text {
@@ -17,8 +25,8 @@
 }
 
 .contained {
-  background-color: var(--primary);
-  color: var(--white);
+  background-color: var(--yellow);
+  color: var(--primary);
   font-weight: normal;
   border-radius: 0.25rem;
   line-height: 2.5rem;

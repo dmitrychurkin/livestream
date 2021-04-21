@@ -1,1 +1,2 @@
-export { ButtonVariants, default } from "./Button";
+export { default } from "./Button";
+export * from "./ButtonVariantEnum";

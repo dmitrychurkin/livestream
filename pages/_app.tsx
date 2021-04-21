@@ -1,16 +1,15 @@
 import { AppProps } from "next/app";
-import { ApolloProvider } from "@apollo/client";
+import { appWithTranslation } from "next-i18next";
+import { Provider as AuthProvider } from "next-auth/client";
 
-import { useApollo } from "../apollo/client";
+import "styles/globals.css";
 
-import "../styles/globals.css";
-
-export default function App({ Component, pageProps }: AppProps): JSX.Element {
-  const apolloClient = useApollo(pageProps.initialApolloState);
-
+function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={apolloClient}>
+    <AuthProvider session={pageProps.session}>
       <Component {...pageProps} />
-    </ApolloProvider>
+    </AuthProvider>
   );
 }
+
+export default appWithTranslation(App);

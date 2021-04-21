@@ -1,0 +1,14 @@
+.root {
+    font-family: var(--primary-font);
+    font-size: 1rem;
+    line-height: 1.313rem;
+    letter-spacing: -0.03em;
+    background-color: var(--field-background-grey);
+    border: 1px solid var(--field-border);
+    border-radius: 0.25rem;
+    color: var(--primary);
+}
+
+.root::placeholder {
+    color: rgba(9, 10, 51, 0.4);
+}
