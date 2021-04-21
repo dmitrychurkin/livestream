@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   grid-gap: 4px;
-  transition: .3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 .root:disabled {
