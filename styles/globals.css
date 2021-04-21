@@ -19,7 +19,8 @@
   --dark: #231c32;
   --white: #fff;
   --field-background-grey: hsl(210 4% 91%);
-
+  --field-border: #d9dbdb;
+  --yellow: #fbd71e;
   /* Fonts */
   --primary-font: TTNorms, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -27,8 +28,6 @@
   font-family: var(--primary-font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  font-size: 14px;
 }
 
 html,
@@ -45,4 +44,13 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+h1 {
+  font-family: var(--primary-font);
+  color: var(--primary);
+  text-align: center;
+  letter-spacing: -0.03em;
+  font-size: 2rem;
+  line-height: 2.25rem;
 }

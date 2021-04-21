@@ -1,0 +1,10 @@
+{
+    "pageTitle": "Login",
+    "title": "Log in to {{name}}",
+    "loginWith": "Log in with {{provider}}",
+    "credentials": "credentials",
+    "placeholder": {
+        "email": "Enter your email address",
+        "password": "Enter your password"
+    }
+}

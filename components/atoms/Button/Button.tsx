@@ -1,17 +1,12 @@
 import clsx from "clsx";
-import React, { FC, ButtonHTMLAttributes, ReactElement, memo } from "react";
+import React, { FC, ButtonHTMLAttributes, memo, ReactNode } from "react";
 import styles from "./Button.module.css";
-
-export enum ButtonVariants {
-  contained = "contained",
-  text = "text",
-  round = "round",
-}
+import { ButtonVariantEnum } from "./ButtonVariantEnum";
 
 type Props = {
-  readonly variant?: ButtonVariants;
-  readonly startIcon?: ReactElement;
-  readonly endIcon?: ReactElement;
+  readonly variant?: ButtonVariantEnum;
+  readonly startIcon?: ReactNode;
+  readonly endIcon?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: FC<Props> = ({
@@ -33,7 +28,7 @@ const Button: FC<Props> = ({
 );
 
 Button.defaultProps = {
-  variant: ButtonVariants.text,
+  variant: ButtonVariantEnum.text,
 };
 
 export default memo(Button);
