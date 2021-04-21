@@ -41,11 +41,9 @@
     justify-items: center;
   }
 
-
   .navigationButtonActive {
     background-color: var(--white);
   }
-
 }
 
 /* .last { */
