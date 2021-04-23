@@ -1,18 +1,19 @@
 .root {
   background-color: var(--page-background);
   /* min-width: 62rem; */
-  padding: 0 1rem;
+  padding: 0 16px;
   /* min-height: 18.75rem; */
 }
 
 .activeArea {
+  padding: 32px 0;
   max-width: 1040px;
   display: grid;
   margin: auto;
   place-content: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .withHeader {
-  grid-template-rows: min-content calc(100vh - 6.5rem);
+  grid-template-rows: min-content calc(100vh - 104px);
 }
